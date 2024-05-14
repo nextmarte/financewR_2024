@@ -1,0 +1,400 @@
+---
+title: "Caderno_ Finanças 1 "
+author: "Ariel"
+format: html
+editor: visual
+execute:
+  warning: false
+  message: false
+  echo: true
+---
+
+Inicialização e carregar pacotes.
+
+## Bibliografia:
+
+Regenstein Jr., Jonathan K.;**Reproducible Finance with R**, CRC press, 2019.
+
+Perlin, Marcelo S.; **Processing and Anlyzing Financial Data with R**, 2018. disponível em :https://www.msperlin.com/padfeR/
+
+Picerno, James; **Quantitative investment Portfoilo Analytic in R**,LLC, 2018.
+
+## Finanças com R Aula 1 - Retornos dos ativos
+
+### Sumário
+
+1.  Importar os preços dos ativos da internet em arquivos .csv ou .xls
+
+2.  Transformar os preços diários em mensais.
+
+3.  Obter os retornos mensais.
+
+4.  Visualizar os retornos mensais.
+
+5.  Calcular o retorno do portifólio utilizando os retornos mensais e pesos.
+
+6.  Visualizar o retorno do portifólio.
+
+7.  Salvar os dados para utilização posterior.
+
+### Ativos x Retorno
+
+O objetvo de investir é fazer lucros. As receitas ou perdas dependem dos valores investidos e das variações nos preços dos ativos escolhidos. Obter o maior ganho ante ao valor investido isto é o desejado.\
+A medida para isto se dá através dos retornos, obtidos pelo cálculo da variação dos preços em certo horizonte de tempo, i.e diário, mensal ou mesmo anual.
+
+A fim de mantermos coerência com o livro texto (Regenstein Jr., 2019) iremos utilizar os mesmos ativos e períodos ali analisados. Nosso objetivo será obter o retorno de 5 ativos e montar e analisar o retono de uma carteira formada com eles.
+
+-   SPY (fundo com S&P500) com peso 25%
+-   EFA (um fundo que contém MSCI índices da Europa, Australia, asia e oriente) com peso 25%
+-   IJS (small-cap:fundos especiais de inovação que se especializam em empresas pequenas e inovadoras) com peso 20%
+-   EEM (Um fundo de mercados emergentes) com peso 20%
+-   AGG (um fundo de títulos de renda fixa) com peso 10% Uma breve explicação sobre carteiras ou portifólios: um portfólio é uma coleção de ativos cujos pesos somam 100%. (sua etimologia remete ao latim para "carregar folhas de papel", que eu suponho que essa denominação se dê no mundo dos investimentos porque títulos costumavam ser folhas de papel). A razão teórica de que os investidores racionais preferem uma carteira a um único ativo é que uma carteira pode oferecer uma melhor relação risco / retorno devido à baixa ou negativa covariância entre os componentes da carteira.
+
+Ao longo do texto estaremos trabalhando em quatro diferentes paradígmas da utilização de dados com R, mais utillizados pela indústria, a saber: xts; tidyverse, tidyquant e o novo tibbletime. Cada um deles tem facilidades específicas que estaremos explorando em nosso aprendizado.
+
+Vamos carregar os pacotes.
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(highcharter)
+library(tidyquant)
+library(tibbletime)
+library(quantmod)
+library(PerformanceAnalytics)
+library(scales)
+library(timetk)
+library(here)
+```
+
+De volta a nossa tarefa: transformar a coleção de preços diários dos ativos em um objeto que armazene os log retornos do portifólio.
+
+#### Importar os preços dos ativos da internet em arquivos .csv ou .xls
+
+Nesta primeira seção iremos aprender a importar os dados: da internet ou de arquivos .csv ou .xls de forma resumida para não divergir de nossos objetivos.
+
+O vetor *symbols* conterá nossos "tickers".
+
+```{r}
+symbols <- c("SPY","EFA", "IJS", "EEM","AGG")
+```
+
+Estes "tickers" são abreviações que denominam nossos ativos nos diversos ambientes, i.e. BOVESPA, CBOT etc..
+
+##### Exercício 1
+
+Encontre no Yahoo os tickers de Petrobras (a mais liquida), Vale, Friboi, Bradesco,e o índice Bovespa e armazene-os num vetor denominado "ativos".
+
+##### Importando dados com o pacote quantmod
+
+O pacote quantmod é bem poderoso e permite obter dados de diversas fontes: \* Yahoo! Finance (OHLC data) \* Federal Reserve Bank of St. Louis FRED® (11,000 economic series) \* Google Finance (OHLC data) \* Oanda, The Currency Site (FX and Metals) \* MySQL databases (Your local data) \* R binary formats (.RData and .rda) \* Comma Separated Value files (.csv) e outros estão em desevolvimento (RODBC,economagic,Rbloomberg,...).
+
+Existem diversas ferramentas para tratar os diferentes estágios de negócios mobiliários, entretanto ainda não há uma ferramenta completa no R que trate de todo o fluxo desde a coleta, do manuseio do dado, e da análise dos resultados da operação.
+
+O objeto *prices* vai armazenar os preços dos ativos pesquisados.
+
+```{r}
+prices <- 
+  getSymbols(symbols, 
+             src = 'yahoo', 
+             from = "2012-12-31",
+             to = "2017-12-31",
+             auto.assign = TRUE, 
+             warnings = FALSE,) %>% 
+  map(~Ad(get(.))) %>% 
+  reduce(merge) %>%
+  `colnames<-`(symbols)
+```
+
+Na primeira instrução passamos nosso vetor de "tickers" para a função *getSymbols ( )* do pacote *quantmod*, doravante utilizaremos a notação quantmod::getSymbols. Veja: [getSymbols()](https://www.quantmod.com/documentation/getSymbols.html).
+
+O argumento *src* indica que estaremos importando estes dados o Yahoo.
+
+Os dois parametros seguintes estabelecem o período para o qual coletaremos os dados. Estaremos fixando a data inicial em dezembro de 2012 para que tenhamos os retornos de 5 anos. Se você desejasse os dados até hoje não necessitaria de fixar a data final, poderia pular o argumento *to*.
+
+Para isolar o preço ajustado utilizou-se purrr::map e Ad(get(.)) que nos fornecerá o preço ajustado de cada uma das séries de preços.
+
+Note que originalmente a função *getSymbols( )* importou os preços OHLC (open, high, low, close). Assim, se quisermos o preço de fechamento utilizaríamos Cl(get(.)).
+
+A função reduce(merge) vai unir os vetores de preços em um único objeto xts. A função merge utiliza a referência do índice de data para alinhar os objetos.
+
+Por fim renomeamos as colunas com os "tickers" com a instrução `colnames<-`(symbols)
+
+Verifique as quatro primeiras linhas de prices.
+
+```{r}
+head(prices,4)
+```
+
+Observe a sua classe
+
+```{r}
+class(prices)
+```
+
+A instrução head ( ) é utilizada pois a classe do objeto lido é xts zoo, Extensible Time Series, ou uma série de tempo extensível. E faz parte dos tipos de objetos adicionados ao R para tratar séries temporais.
+
+Este formato é uma classe especial do objeto zoo do pacote de mesmo nome e consiste num array quase sempre uma matriz que contem um índice que fornece indicação sobre seu ordenamento. O objeto xts tem três caracterísitcas que o diferem do zoo, o uso formal do indexamento pela base de tempo, propriedades internas do xts e atributos que podem ser atribuídos pelo usuário. Para mais informações veja: [xts object](https://cran.r-project.org/web/packages/xts/vignettes/xts.pdf)
+
+#### Exercício 2
+
+Obtenha os preços dos ativos do exercício 1 para o último ano.
+
+#### Importando dados em .csv
+
+Baixe os dados prices.csv do seu diretório da aula e coloque-os no mesmo diretório de trabalho, que como já foi orientado deverá ser um de seu projeto. Se não pôs ali utilize no console *file.choose()* e ache o caminho até seu arquivo.
+
+Utilizaremos a função readr::read_csv
+
+```{r importar .csv, eval=FALSE, warning=FALSE}
+# prices.fromcsv<-read_csv("Reproducible Finance.csv",
+#                  col_types = 
+#                    cols(date =
+#                           col_date(format = "%Y-%m-%d"))) %>% 
+#   tk_xts(date_var = date)
+```
+
+A função read::read_csv nos possibilit a importação. Entretanto, interpretará nossa coluna de datas como numérico, para ajustar especificaremos a coluna com o formato ISO ano-mês-dia, com a instrução: col_types = cols(date = col_date(format = "%Y-%m-%d"))
+
+Por fim a função timetk::tk_xts converte o data frame para um objeto xts. Isto porque desejamos manter a coerência com a versão anterior de *prices* obtida com *getSymbols( )*.
+
+Quando o arquivo for .xls utiliza-se a função readxl::read_excel( ).
+
+```{r}
+prices.fromxlsx<-
+  read_excel("/Users/alevy/Downloads/Reproducible Finance.xlsx",
+                 col_types = c("text", "numeric",
+                               "numeric","numeric",
+                               "numeric","numeric")) %>% 
+  mutate( date = ymd(date)) %>% 
+  tk_xts(date_var = date)
+```
+
+Também aqui teremos que converter a coluna de datas para um formato adequado, utilizamos o dplyr::mutate com a função lubridate::ymd( ).
+
+Assim, apresentamos três formas de importação dos dados e ao fazê-lo adicionamos mais algumas ferramentas ao nosso conjunto.
+
+#### Convertendo preços diários em retornos mensais.
+
+Primeiro utilizaremos os dados em xts.
+
+Nossa primeira observação no objeto *prices* datava de 31, de dezembro de 2012 (última observação de pregão daquele ano). Converteremos com base na data final do mês, se desejassemos o primeiro faríamos indexAt = "firstof".
+
+```{r}
+prices_monthly <- to.monthly(prices, indexAt = "lastof", OHLC = FALSE)
+head(prices_monthly,4)
+```
+
+Observe que agora temos apenas uma observação por mês, no novo objeto que ainda se mantém na classe xts.
+
+### Obtendo retornos com objetos xts
+
+```{r retornos mensais}
+asset_returns_xts <-
+ PerformanceAnalytics::Return.calculate(prices_monthly, 
+                   method = "log") %>% 
+  na.omit()
+head(asset_returns_xts,4)
+```
+
+Normalmente quando abordamos o termo retorno nos referimos ao retorno linear, calculado por: $$ Retorno\,linear = \frac{Preço_{final}-Preço_{inicial}}{Preço_{inicial}}$$
+
+Na academia utiliza-se mais os log retornos.
+
+#### Exercício 3
+
+Suponha que uma ação caia 50% e depois sobe 50%, de quanto foi a variação total no período? dica(Componha o retorno destes dois períodos utilizando juros compostos.)
+
+Para calcular o log retorno utiliza-se: $$ Log\,Retorno = \ln(\frac{Preço_{final}}{Preço_{inicial}})$$
+
+####Exercício 4 Suponha que uma ação caia 50% e depois sobe 50%, de quanto foi a variação total no período? dica (utilize os log retornos)
+
+Como converter um no outro?
+
+$$ Retorno\,linear = e^{Log\,Retorno}-1$$ $$ Log\,Retorno = \ln(1+Retorno\,linear)$$
+
+Quanto menores os valores dos retornos em módulo mais o retorno linear se aproxima do log-retorno. Então, tudo bem utilizar o log retorno para facilitar as contas. Contudo não esqueça de apresentar seus resultados com retornos lineares. As pessoas nnão estão acostumadas a pensar com log-retornos. Quando dizemos que um ativo subiu 20% associamos a alteração dos preços de 100 para 120 e não para 122,1 que corresponderia ao log-retorno.
+
+## Convertendo preços diários em retornos mensais no ambiente tidyverse PAREI
+
+```{r}
+asset_returns_dplyr_byhand <- 
+  prices %>% 
+  to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  tbl_time(index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+  group_by(asset) %>%  
+  mutate(returns = (log(returns) - log(lag(returns)))) %>%
+  pivot_wider(names_from = asset, values_from = returns) %>% 
+  select(date, SPY, EFA, IJS, EEM, AGG) %>% 
+  na.omit()
+```
+
+O código acima resolve a questão. Tome seu tempo e rode 3 linhas por vez observando as transformações ocorridas.
+
+Finalmente vamos verificar o novo objeto, e descrever as diferenças.
+
+```{r}
+head(asset_returns_dplyr_byhand)
+```
+
+Se não tivéssemos omitidos os NAs haveria uma observação em 2012-12-31 com NA em todas as colunas.
+
+#### Convertendo preços diários em retornos mensais no tidyquant.
+
+Vamos explorar este novo tipo de ambiente obtendo os log-retornos. Iniciaremos com a função timetk::tk_tbl(). Na porção de código abaixo utilizaremos a instrução:
+
+tk_tbl(preserve_index = TRUE, rename_index = "date")
+
+que transforma prices de xts em um tibble, converte o índices de datas em uma coluna, e renomeia ele como date. Veja que não foi preciso removê-lo como fizemos anteriormente.
+
+Na sequência em ves de utilizar to.monthly e mutate e escrevendo noso cálculo utilizamos a instrução:
+
+tq_transmute(mutate_fun = periodReturn, period = "monthly", type = "log")
+
+que permite ir diretamente de preços diários a log-retornos.
+
+```{r}
+asset_returns_tq_builtin <- 
+  prices %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "prices") %>%
+  group_by(asset) %>%
+  mutate(returns = log(prices) - log(lag(prices))) %>%
+  pivot_wider(names_from = asset, values_from = returns) %>%
+  select(date, SPY, EFA, IJS, EEM, AGG) %>%
+  na.omit() %>%
+  slice(-1)
+
+```
+
+Mais uma vez precisamos retirar a observação que aparece com NAs. Desta vez utilizamos a instrução slice(-1). Cuidado como sinal! Se utilizar equivocadamnte slice(1) terminará somente com a primeira linha.
+
+O método tidyquant produz exatamente o mesmo resultado que com o tidyverse, um tibble.
+
+#### Convertendo preços diários em retornos mensais com tibbletime.
+
+Fechando esta seção utilizaremos o pacote *tibbletime*, cujo propósito é trabalhar com tibbles que utilizem tempo.
+
+No código a seguir iniciaremos transformando os preços em um tibble com *tk_tbl( )*. Depois convertermos o objeto num apropriado ao tibbletime com *as_tbl_time(index = date)* e então converteremos os preços para mensais com *as_period(period = "month", side = "end"). O argumento side* ancora o resultado ao fim de cada mês. Se desejásssemos o início faríamos side = "start"\*.
+
+```{r tibletime}
+asset_returns_tbltime <- 
+  prices %>% 
+  to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  tbl_time(index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+  group_by(date = floor_date(date, 'month')) %>%
+  mutate(returns = log(returns)) %>% 
+  na.omit()
+  
+
+```
+
+Embora este código, no momento, pareça ineficiente com converções de xts para tibble e depois para tibbletime, nas aulas seguintes veremos que quando precisarmos realizar rolamentos estes serão facilitados pela função *rollify( )*. Então, absorveremos alguma ineficiência agora para ganhos futuros. Este pacote ainda é muito novo e suas capacidades estão aumentando rapidamente.
+
+#### Visualizando retornos no xts
+
+Uma prática que pode ser útil é visualizar os retornos individuias dos ativos antes de empacotá-los num portifólio. Isto porque dificilmente voltará a analisá-los individualmente depois.
+
+Para este propósito apresentaremos o pacote *highcharter* que além de ser capaz de visuais incríveis trabalha com objetos xts.
+
+```{r highchart visualization}
+highchart(type = "stock") %>% 
+  hc_title( text = "Montly Log Returns") %>% 
+  hc_add_series(asset_returns_xts[,symbols[1]],
+                name = symbols[1]) %>% 
+  hc_add_series(asset_returns_xts[,symbols[2]],
+                name = symbols[2]) %>% 
+  hc_add_series(asset_returns_xts[,symbols[3]],
+                name = symbols[3]) %>% 
+  hc_add_series(asset_returns_xts[,symbols[4]],
+                name = symbols[4]) %>% 
+  hc_add_series(asset_returns_xts[,symbols[5]],
+                name = symbols[5]) %>% 
+  hc_add_theme(hc_theme_flat()) %>% 
+  hc_navigator(enabled=FALSE) %>% 
+  hc_scrollbar(enabled=FALSE) %>% 
+  hc_exporting(enabled=FALSE) %>% 
+  hc_legend(enabled=TRUE)
+  
+```
+
+No gráfico temos uma linha para os retornos mensais de cada ativo. Passe o mouse sobre o gráfico e examine como apresenta os dados de cada ativo.
+
+Hicharter também tem a capacidade de fazer histogramas.
+
+```{r highchart histogram}
+hc_hist<-hist(asset_returns_xts[, symbols[1]],
+              breaks= 50,
+              plot = FALSE)
+
+hchart(hc_hist, color="cornflowerblue") %>% 
+  hc_title(text= 
+             paste(symbols[1],
+                   "Log Returns Distribution",
+                   sep= " ")) %>% 
+  hc_add_theme(hc_theme_flat()) %>% 
+  hc_exporting(enabled=FALSE) %>% 
+  hc_legend(enabled=TRUE) 
+
+```
+
+Agora podemos introduzir o conceito de funções para criar os histogramas.
+
+```{r}
+hc_hist_fun<-function( n=1, object, color){
+  hc_hist<-hist(object[,symbols[n]],
+                breaks = 50,
+                plot =FALSE)
+hchart(hc_hist, color = color) %>% 
+  hc_title(text = 
+             paste(symbols[n],
+                   "Log Returns Distribution",
+                   sep= " ")) %>% 
+  hc_add_theme(hc_theme_flat()) %>% 
+  hc_exporting(enabled=FALSE) %>% 
+  hc_legend(enabled=TRUE) 
+}
+```
+
+Agora podemos criar um histograma para cada ativo.
+
+```{r}
+hc_hist_fun(1, asset_returns_xts,"cornflowerblue")
+hc_hist_fun(2, asset_returns_xts,"green")
+hc_hist_fun(3, asset_returns_xts,"pink")
+hc_hist_fun(4, asset_returns_xts,"purple")
+hc_hist_fun(5, asset_returns_xts,"yellow")
+```
+
+Poderíamos ter utilizado purrr::map e aplicar a função ao nosso objeto xts, percorrendo cada um dos ativos obtendo um histograma para cada.
+
+```{r}
+map(1:5, hc_hist_fun, asset_returns_xts, "blue")
+```
+
+#### Visualização com tidyverse
+
+Este assunto já foi coberto em nossas aulas anteriores. Então seguem os exercícios.
+
+#### Exercício 5
+
+Utilize o ggplot2 e o código abaixo para obter a forma longa do objeto tidyverse desenvolvido no texto. Obtenha um histograma conjunto com uma cor por ativo utilizando os argumentos alpha=0.45 e binwidth = .005. Coloque o título de "Monthly Returns Since 2013"
+
+#### Exercício 6 Obtenha o gráfico acima utilizando o conceito de *ggplot2:facet_wrap()*.
+
+#### Exercício 7
+
+Refaça os dois exercícios para a carteira com ativos brasileiros.
+
+#### Exercício 8 Obtenha o gráfico das densidades das distribuições dos ativos do objeto tidyverse desenvolvido coloque o título: "Monthly Returns Density Since 2013"e para o eixo x: "monthly returns" e y: "distribution".
+
+#### Exercício 9
+
+Combine para os ativos do portifólio utilizando o ggplot2::facetwrap os histogramas e densidades. Utilize título: "Monthly Returns Density Since 2013"e para o eixo x: "monthly returns" e y: "distribution".
+
+Por hoje é só... obs entregue seus exercícios no schoology.com valem nota.
