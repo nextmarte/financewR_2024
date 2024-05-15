@@ -162,6 +162,7 @@ Por fim a função timetk::tk_xts converte o data frame para um objeto xts. Isto
 Quando o arquivo for .xls utiliza-se a função readxl::read_excel( ).
 
 ```{r}
+#| eval: false
 prices.fromxlsx<-
   read_excel("/Users/alevy/Downloads/Reproducible Finance.xlsx",
                  col_types = c("text", "numeric",

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.472">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ariel">
+
+<title>Finanças com R - Caderno_ Finanças 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="site_libs/proj4js-2.3.15/proj4.js"></script>
+<link href="site_libs/highcharts-9.3.1/css/motion.css" rel="stylesheet">
+<script src="site_libs/highcharts-9.3.1/highcharts.js"></script>
+<script src="site_libs/highcharts-9.3.1/highcharts-3d.js"></script>
+<script src="site_libs/highcharts-9.3.1/highcharts-more.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/stock.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/map.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/data.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/exporting.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/offline-exporting.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/drilldown.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/item-series.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/overlapping-datalabels.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/annotations.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/export-data.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/funnel.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/heatmap.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/treemap.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/sankey.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/dependency-wheel.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/organization.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/solid-gauge.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/streamgraph.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/sunburst.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/vector.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/wordcloud.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/xrange.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/tilemap.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/venn.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/gantt.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/timeline.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/parallel-coordinates.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/bullet.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/coloraxis.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/dumbbell.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/lollipop.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/series-label.js"></script>
+<script src="site_libs/highcharts-9.3.1/plugins/motion.js"></script>
+<script src="site_libs/highcharts-9.3.1/custom/reset.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/boost.js"></script>
+<script src="site_libs/highchart-binding-0.9.4/highchart.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Finanças com R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./Finance_with_R_1_2022.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#bibliografia" id="toc-bibliografia" class="nav-link active" data-scroll-target="#bibliografia">Bibliografia:</a></li>
+  <li><a href="#finanças-com-r-aula-1---retornos-dos-ativos" id="toc-finanças-com-r-aula-1---retornos-dos-ativos" class="nav-link" data-scroll-target="#finanças-com-r-aula-1---retornos-dos-ativos">Finanças com R Aula 1 - Retornos dos ativos</a>
+  <ul class="collapse">
+  <li><a href="#sumário" id="toc-sumário" class="nav-link" data-scroll-target="#sumário">Sumário</a></li>
+  <li><a href="#ativos-x-retorno" id="toc-ativos-x-retorno" class="nav-link" data-scroll-target="#ativos-x-retorno">Ativos x Retorno</a></li>
+  <li><a href="#obtendo-retornos-com-objetos-xts" id="toc-obtendo-retornos-com-objetos-xts" class="nav-link" data-scroll-target="#obtendo-retornos-com-objetos-xts">Obtendo retornos com objetos xts</a></li>
+  </ul></li>
+  <li><a href="#convertendo-preços-diários-em-retornos-mensais-no-ambiente-tidyverse-parei" id="toc-convertendo-preços-diários-em-retornos-mensais-no-ambiente-tidyverse-parei" class="nav-link" data-scroll-target="#convertendo-preços-diários-em-retornos-mensais-no-ambiente-tidyverse-parei">Convertendo preços diários em retornos mensais no ambiente tidyverse PAREI</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Caderno_ Finanças 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ariel </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Inicialização e carregar pacotes.</p>
+<section id="bibliografia" class="level2">
+<h2 class="anchored" data-anchor-id="bibliografia">Bibliografia:</h2>
+<p>Regenstein Jr., Jonathan K.;<strong>Reproducible Finance with R</strong>, CRC press, 2019.</p>
+<p>Perlin, Marcelo S.; <strong>Processing and Anlyzing Financial Data with R</strong>, 2018. disponível em :https://www.msperlin.com/padfeR/</p>
+<p>Picerno, James; <strong>Quantitative investment Portfoilo Analytic in R</strong>,LLC, 2018.</p>
+</section>
+<section id="finanças-com-r-aula-1---retornos-dos-ativos" class="level2">
+<h2 class="anchored" data-anchor-id="finanças-com-r-aula-1---retornos-dos-ativos">Finanças com R Aula 1 - Retornos dos ativos</h2>
+<section id="sumário" class="level3">
+<h3 class="anchored" data-anchor-id="sumário">Sumário</h3>
+<ol type="1">
+<li><p>Importar os preços dos ativos da internet em arquivos .csv ou .xls</p></li>
+<li><p>Transformar os preços diários em mensais.</p></li>
+<li><p>Obter os retornos mensais.</p></li>
+<li><p>Visualizar os retornos mensais.</p></li>
+<li><p>Calcular o retorno do portifólio utilizando os retornos mensais e pesos.</p></li>
+<li><p>Visualizar o retorno do portifólio.</p></li>
+<li><p>Salvar os dados para utilização posterior.</p></li>
+</ol>
+</section>
+<section id="ativos-x-retorno" class="level3">
+<h3 class="anchored" data-anchor-id="ativos-x-retorno">Ativos x Retorno</h3>
+<p>O objetvo de investir é fazer lucros. As receitas ou perdas dependem dos valores investidos e das variações nos preços dos ativos escolhidos. Obter o maior ganho ante ao valor investido isto é o desejado.<br>
+A medida para isto se dá através dos retornos, obtidos pelo cálculo da variação dos preços em certo horizonte de tempo, i.e diário, mensal ou mesmo anual.</p>
+<p>A fim de mantermos coerência com o livro texto (Regenstein Jr., 2019) iremos utilizar os mesmos ativos e períodos ali analisados. Nosso objetivo será obter o retorno de 5 ativos e montar e analisar o retono de uma carteira formada com eles.</p>
+<ul>
+<li>SPY (fundo com S&amp;P500) com peso 25%</li>
+<li>EFA (um fundo que contém MSCI índices da Europa, Australia, asia e oriente) com peso 25%</li>
+<li>IJS (small-cap:fundos especiais de inovação que se especializam em empresas pequenas e inovadoras) com peso 20%</li>
+<li>EEM (Um fundo de mercados emergentes) com peso 20%</li>
+<li>AGG (um fundo de títulos de renda fixa) com peso 10% Uma breve explicação sobre carteiras ou portifólios: um portfólio é uma coleção de ativos cujos pesos somam 100%. (sua etimologia remete ao latim para “carregar folhas de papel”, que eu suponho que essa denominação se dê no mundo dos investimentos porque títulos costumavam ser folhas de papel). A razão teórica de que os investidores racionais preferem uma carteira a um único ativo é que uma carteira pode oferecer uma melhor relação risco / retorno devido à baixa ou negativa covariância entre os componentes da carteira.</li>
+</ul>
+<p>Ao longo do texto estaremos trabalhando em quatro diferentes paradígmas da utilização de dados com R, mais utillizados pela indústria, a saber: xts; tidyverse, tidyquant e o novo tibbletime. Cada um deles tem facilidades específicas que estaremos explorando em nosso aprendizado.</p>
+<p>Vamos carregar os pacotes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(highcharter)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyquant)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibbletime)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PerformanceAnalytics)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(timetk)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>De volta a nossa tarefa: transformar a coleção de preços diários dos ativos em um objeto que armazene os log retornos do portifólio.</p>
+<section id="importar-os-preços-dos-ativos-da-internet-em-arquivos-.csv-ou-.xls" class="level4">
+<h4 class="anchored" data-anchor-id="importar-os-preços-dos-ativos-da-internet-em-arquivos-.csv-ou-.xls">Importar os preços dos ativos da internet em arquivos .csv ou .xls</h4>
+<p>Nesta primeira seção iremos aprender a importar os dados: da internet ou de arquivos .csv ou .xls de forma resumida para não divergir de nossos objetivos.</p>
+<p>O vetor <em>symbols</em> conterá nossos “tickers”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>symbols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"SPY"</span>,<span class="st">"EFA"</span>, <span class="st">"IJS"</span>, <span class="st">"EEM"</span>,<span class="st">"AGG"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Estes “tickers” são abreviações que denominam nossos ativos nos diversos ambientes, i.e.&nbsp;BOVESPA, CBOT etc..</p>
+<section id="exercício-1" class="level5">
+<h5 class="anchored" data-anchor-id="exercício-1">Exercício 1</h5>
+<p>Encontre no Yahoo os tickers de Petrobras (a mais liquida), Vale, Friboi, Bradesco,e o índice Bovespa e armazene-os num vetor denominado “ativos”.</p>
+</section>
+<section id="importando-dados-com-o-pacote-quantmod" class="level5">
+<h5 class="anchored" data-anchor-id="importando-dados-com-o-pacote-quantmod">Importando dados com o pacote quantmod</h5>
+<p>O pacote quantmod é bem poderoso e permite obter dados de diversas fontes: * Yahoo! Finance (OHLC data) * Federal Reserve Bank of St.&nbsp;Louis FRED® (11,000 economic series) * Google Finance (OHLC data) * Oanda, The Currency Site (FX and Metals) * MySQL databases (Your local data) * R binary formats (.RData and .rda) * Comma Separated Value files (.csv) e outros estão em desevolvimento (RODBC,economagic,Rbloomberg,…).</p>
+<p>Existem diversas ferramentas para tratar os diferentes estágios de negócios mobiliários, entretanto ainda não há uma ferramenta completa no R que trate de todo o fluxo desde a coleta, do manuseio do dado, e da análise dos resultados da operação.</p>
+<p>O objeto <em>prices</em> vai armazenar os preços dos ativos pesquisados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">getSymbols</span>(symbols, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">src =</span> <span class="st">'yahoo'</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">from =</span> <span class="st">"2012-12-31"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">to =</span> <span class="st">"2017-12-31"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">auto.assign =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">warnings =</span> <span class="cn">FALSE</span>,) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span><span class="fu">Ad</span>(<span class="fu">get</span>(.))) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(merge) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">colnames&lt;-</span><span class="st">`</span>(symbols)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Na primeira instrução passamos nosso vetor de “tickers” para a função <em>getSymbols ( )</em> do pacote <em>quantmod</em>, doravante utilizaremos a notação quantmod::getSymbols. Veja: <a href="https://www.quantmod.com/documentation/getSymbols.html">getSymbols()</a>.</p>
+<p>O argumento <em>src</em> indica que estaremos importando estes dados o Yahoo.</p>
+<p>Os dois parametros seguintes estabelecem o período para o qual coletaremos os dados. Estaremos fixando a data inicial em dezembro de 2012 para que tenhamos os retornos de 5 anos. Se você desejasse os dados até hoje não necessitaria de fixar a data final, poderia pular o argumento <em>to</em>.</p>
+<p>Para isolar o preço ajustado utilizou-se purrr::map e Ad(get(.)) que nos fornecerá o preço ajustado de cada uma das séries de preços.</p>
+<p>Note que originalmente a função <em>getSymbols( )</em> importou os preços OHLC (open, high, low, close). Assim, se quisermos o preço de fechamento utilizaríamos Cl(get(.)).</p>
+<p>A função reduce(merge) vai unir os vetores de preços em um único objeto xts. A função merge utiliza a referência do índice de data para alinhar os objetos.</p>
+<p>Por fim renomeamos as colunas com os “tickers” com a instrução <code>colnames&lt;-</code>(symbols)</p>
+<p>Verifique as quatro primeiras linhas de prices.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(prices,<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                SPY      EFA      IJS      EEM      AGG
+2012-12-31 116.1451 41.22703 34.19090 34.83741 84.13486
+2013-01-02 119.1219 41.86508 35.12902 35.52080 84.03642
+2013-01-03 118.8528 41.45905 35.08254 35.26944 83.82430
+2013-01-04 119.3747 41.66931 35.35721 35.34013 83.91518</code></pre>
+</div>
+</div>
+<p>Observe a sua classe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(prices)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xts" "zoo"</code></pre>
+</div>
+</div>
+<p>A instrução head ( ) é utilizada pois a classe do objeto lido é xts zoo, Extensible Time Series, ou uma série de tempo extensível. E faz parte dos tipos de objetos adicionados ao R para tratar séries temporais.</p>
+<p>Este formato é uma classe especial do objeto zoo do pacote de mesmo nome e consiste num array quase sempre uma matriz que contem um índice que fornece indicação sobre seu ordenamento. O objeto xts tem três caracterísitcas que o diferem do zoo, o uso formal do indexamento pela base de tempo, propriedades internas do xts e atributos que podem ser atribuídos pelo usuário. Para mais informações veja: <a href="https://cran.r-project.org/web/packages/xts/vignettes/xts.pdf">xts object</a></p>
+</section>
+</section>
+<section id="exercício-2" class="level4">
+<h4 class="anchored" data-anchor-id="exercício-2">Exercício 2</h4>
+<p>Obtenha os preços dos ativos do exercício 1 para o último ano.</p>
+</section>
+<section id="importando-dados-em-.csv" class="level4">
+<h4 class="anchored" data-anchor-id="importando-dados-em-.csv">Importando dados em .csv</h4>
+<p>Baixe os dados prices.csv do seu diretório da aula e coloque-os no mesmo diretório de trabalho, que como já foi orientado deverá ser um de seu projeto. Se não pôs ali utilize no console <em>file.choose()</em> e ache o caminho até seu arquivo.</p>
+<p>Utilizaremos a função readr::read_csv</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># prices.fromcsv&lt;-read_csv("Reproducible Finance.csv",</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                  col_types = </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                    cols(date =</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                           col_date(format = "%Y-%m-%d"))) %&gt;% </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   tk_xts(date_var = date)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A função read::read_csv nos possibilit a importação. Entretanto, interpretará nossa coluna de datas como numérico, para ajustar especificaremos a coluna com o formato ISO ano-mês-dia, com a instrução: col_types = cols(date = col_date(format = “%Y-%m-%d”))</p>
+<p>Por fim a função timetk::tk_xts converte o data frame para um objeto xts. Isto porque desejamos manter a coerência com a versão anterior de <em>prices</em> obtida com <em>getSymbols( )</em>.</p>
+<p>Quando o arquivo for .xls utiliza-se a função readxl::read_excel( ).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>prices.fromxlsx<span class="ot">&lt;-</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_excel</span>(<span class="st">"/Users/alevy/Downloads/Reproducible Finance.xlsx"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"text"</span>, <span class="st">"numeric"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"numeric"</span>,<span class="st">"numeric"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"numeric"</span>,<span class="st">"numeric"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">date =</span> <span class="fu">ymd</span>(date)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_xts</span>(<span class="at">date_var =</span> date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Também aqui teremos que converter a coluna de datas para um formato adequado, utilizamos o dplyr::mutate com a função lubridate::ymd( ).</p>
+<p>Assim, apresentamos três formas de importação dos dados e ao fazê-lo adicionamos mais algumas ferramentas ao nosso conjunto.</p>
+</section>
+<section id="convertendo-preços-diários-em-retornos-mensais." class="level4">
+<h4 class="anchored" data-anchor-id="convertendo-preços-diários-em-retornos-mensais.">Convertendo preços diários em retornos mensais.</h4>
+<p>Primeiro utilizaremos os dados em xts.</p>
+<p>Nossa primeira observação no objeto <em>prices</em> datava de 31, de dezembro de 2012 (última observação de pregão daquele ano). Converteremos com base na data final do mês, se desejassemos o primeiro faríamos indexAt = “firstof”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>prices_monthly <span class="ot">&lt;-</span> <span class="fu">to.monthly</span>(prices, <span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(prices_monthly,<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                SPY      EFA      IJS      EEM      AGG
+2012-12-31 116.1451 41.22703 34.19090 34.83741 84.13486
+2013-01-31 122.0906 42.76416 36.02067 34.73529 83.61222
+2013-02-28 123.6483 42.21310 36.60805 33.94192 84.10631
+2013-03-31 128.3434 42.76416 38.11188 33.59630 84.18919</code></pre>
+</div>
+</div>
+<p>Observe que agora temos apenas uma observação por mês, no novo objeto que ainda se mantém na classe xts.</p>
+</section>
+</section>
+<section id="obtendo-retornos-com-objetos-xts" class="level3">
+<h3 class="anchored" data-anchor-id="obtendo-retornos-com-objetos-xts">Obtendo retornos com objetos xts</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>asset_returns_xts <span class="ot">&lt;-</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a> PerformanceAnalytics<span class="sc">::</span><span class="fu">Return.calculate</span>(prices_monthly, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">method =</span> <span class="st">"log"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(asset_returns_xts,<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  SPY         EFA         IJS          EEM           AGG
+2013-01-31 0.04992323  0.03660622 0.052133497 -0.002935511 -0.0062313540
+2013-02-28 0.01267830 -0.01296967 0.016175101 -0.023105323  0.0058918791
+2013-03-31 0.03726793  0.01296967 0.040257985 -0.010234863  0.0009850025
+2013-04-30 0.01902986  0.04896768 0.001222678  0.012084534  0.0096388961</code></pre>
+</div>
+</div>
+<p>Normalmente quando abordamos o termo retorno nos referimos ao retorno linear, calculado por: <span class="math display">\[ Retorno\,linear = \frac{Preço_{final}-Preço_{inicial}}{Preço_{inicial}}\]</span></p>
+<p>Na academia utiliza-se mais os log retornos.</p>
+<section id="exercício-3" class="level4">
+<h4 class="anchored" data-anchor-id="exercício-3">Exercício 3</h4>
+<p>Suponha que uma ação caia 50% e depois sobe 50%, de quanto foi a variação total no período? dica(Componha o retorno destes dois períodos utilizando juros compostos.)</p>
+<p>Para calcular o log retorno utiliza-se: <span class="math display">\[ Log\,Retorno = \ln(\frac{Preço_{final}}{Preço_{inicial}})\]</span></p>
+<p>####Exercício 4 Suponha que uma ação caia 50% e depois sobe 50%, de quanto foi a variação total no período? dica (utilize os log retornos)</p>
+<p>Como converter um no outro?</p>
+<p><span class="math display">\[ Retorno\,linear = e^{Log\,Retorno}-1\]</span> <span class="math display">\[ Log\,Retorno = \ln(1+Retorno\,linear)\]</span></p>
+<p>Quanto menores os valores dos retornos em módulo mais o retorno linear se aproxima do log-retorno. Então, tudo bem utilizar o log retorno para facilitar as contas. Contudo não esqueça de apresentar seus resultados com retornos lineares. As pessoas nnão estão acostumadas a pensar com log-retornos. Quando dizemos que um ativo subiu 20% associamos a alteração dos preços de 100 para 120 e não para 122,1 que corresponderia ao log-retorno.</p>
+</section>
+</section>
+</section>
+<section id="convertendo-preços-diários-em-retornos-mensais-no-ambiente-tidyverse-parei" class="level2">
+<h2 class="anchored" data-anchor-id="convertendo-preços-diários-em-retornos-mensais-no-ambiente-tidyverse-parei">Convertendo preços diários em retornos mensais no ambiente tidyverse PAREI</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>asset_returns_dplyr_byhand <span class="ot">&lt;-</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span>  </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> (<span class="fu">log</span>(returns) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(returns)))) <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> asset, <span class="at">values_from =</span> returns) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, SPY, EFA, IJS, EEM, AGG) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O código acima resolve a questão. Tome seu tempo e rode 3 linhas por vez observando as transformações ocorridas.</p>
+<p>Finalmente vamos verificar o novo objeto, e descrever as diferenças.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(asset_returns_dplyr_byhand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  date           SPY     EFA      IJS      EEM       AGG
+  &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 2013-01-31  0.0499  0.0366  0.0521  -0.00294 -0.00623 
+2 2013-02-28  0.0127 -0.0130  0.0162  -0.0231   0.00589 
+3 2013-03-31  0.0373  0.0130  0.0403  -0.0102   0.000985
+4 2013-04-30  0.0190  0.0490  0.00122  0.0121   0.00964 
+5 2013-05-31  0.0233 -0.0307  0.0420  -0.0495  -0.0202  
+6 2013-06-30 -0.0134 -0.0271 -0.00140 -0.0547  -0.0158  </code></pre>
+</div>
+</div>
+<p>Se não tivéssemos omitidos os NAs haveria uma observação em 2012-12-31 com NA em todas as colunas.</p>
+<section id="convertendo-preços-diários-em-retornos-mensais-no-tidyquant." class="level4">
+<h4 class="anchored" data-anchor-id="convertendo-preços-diários-em-retornos-mensais-no-tidyquant.">Convertendo preços diários em retornos mensais no tidyquant.</h4>
+<p>Vamos explorar este novo tipo de ambiente obtendo os log-retornos. Iniciaremos com a função timetk::tk_tbl(). Na porção de código abaixo utilizaremos a instrução:</p>
+<p>tk_tbl(preserve_index = TRUE, rename_index = “date”)</p>
+<p>que transforma prices de xts em um tibble, converte o índices de datas em uma coluna, e renomeia ele como date. Veja que não foi preciso removê-lo como fizemos anteriormente.</p>
+<p>Na sequência em ves de utilizar to.monthly e mutate e escrevendo noso cálculo utilizamos a instrução:</p>
+<p>tq_transmute(mutate_fun = periodReturn, period = “monthly”, type = “log”)</p>
+<p>que permite ir diretamente de preços diários a log-retornos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>asset_returns_tq_builtin <span class="ot">&lt;-</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"prices"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> <span class="fu">log</span>(prices) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(prices))) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> asset, <span class="at">values_from =</span> returns) <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, SPY, EFA, IJS, EEM, AGG) <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Mais uma vez precisamos retirar a observação que aparece com NAs. Desta vez utilizamos a instrução slice(-1). Cuidado como sinal! Se utilizar equivocadamnte slice(1) terminará somente com a primeira linha.</p>
+<p>O método tidyquant produz exatamente o mesmo resultado que com o tidyverse, um tibble.</p>
+</section>
+<section id="convertendo-preços-diários-em-retornos-mensais-com-tibbletime." class="level4">
+<h4 class="anchored" data-anchor-id="convertendo-preços-diários-em-retornos-mensais-com-tibbletime.">Convertendo preços diários em retornos mensais com tibbletime.</h4>
+<p>Fechando esta seção utilizaremos o pacote <em>tibbletime</em>, cujo propósito é trabalhar com tibbles que utilizem tempo.</p>
+<p>No código a seguir iniciaremos transformando os preços em um tibble com <em>tk_tbl( )</em>. Depois convertermos o objeto num apropriado ao tibbletime com <em>as_tbl_time(index = date)</em> e então converteremos os preços para mensais com <em>as_period(period = “month”, side = “end”). O argumento side</em> ancora o resultado ao fim de cada mês. Se desejásssemos o início faríamos side = “start”*.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>asset_returns_tbltime <span class="ot">&lt;-</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">date =</span> <span class="fu">floor_date</span>(date, <span class="st">'month'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> <span class="fu">log</span>(returns)) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Embora este código, no momento, pareça ineficiente com converções de xts para tibble e depois para tibbletime, nas aulas seguintes veremos que quando precisarmos realizar rolamentos estes serão facilitados pela função <em>rollify( )</em>. Então, absorveremos alguma ineficiência agora para ganhos futuros. Este pacote ainda é muito novo e suas capacidades estão aumentando rapidamente.</p>
+</section>
+<section id="visualizando-retornos-no-xts" class="level4">
+<h4 class="anchored" data-anchor-id="visualizando-retornos-no-xts">Visualizando retornos no xts</h4>
+<p>Uma prática que pode ser útil é visualizar os retornos individuias dos ativos antes de empacotá-los num portifólio. Isto porque dificilmente voltará a analisá-los individualmente depois.</p>
+<p>Para este propósito apresentaremos o pacote <em>highcharter</em> que além de ser capaz de visuais incríveis trabalha com objetos xts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">highchart</span>(<span class="at">type =</span> <span class="st">"stock"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_title</span>( <span class="at">text =</span> <span class="st">"Montly Log Returns"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_series</span>(asset_returns_xts[,symbols[<span class="dv">1</span>]],</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">name =</span> symbols[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_series</span>(asset_returns_xts[,symbols[<span class="dv">2</span>]],</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">name =</span> symbols[<span class="dv">2</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_series</span>(asset_returns_xts[,symbols[<span class="dv">3</span>]],</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">name =</span> symbols[<span class="dv">3</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_series</span>(asset_returns_xts[,symbols[<span class="dv">4</span>]],</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">name =</span> symbols[<span class="dv">4</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_series</span>(asset_returns_xts[,symbols[<span class="dv">5</span>]],</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">name =</span> symbols[<span class="dv">5</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_theme</span>(<span class="fu">hc_theme_flat</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_navigator</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_scrollbar</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_exporting</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_legend</span>(<span class="at">enabled=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-f334f37efb124e7d1358" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-f334f37efb124e7d1358">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"Montly Log Returns"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[[1359590400000,0.04992322730690635],[1362009600000,0.01267829745966953],[1364688000000,0.03726792591409378],[1367280000000,0.01902986325753719],[1369958400000,0.02333552492346591],[1372550400000,-0.01343451944822771],[1375228800000,0.05038594204420743],[1377907200000,-0.03045108049544876],[1380499200000,0.03115557690107451],[1383177600000,0.04526691457781684],[1385769600000,0.02920684107141014],[1388448000000,0.02559606279544013],[1391126400000,-0.03588418335612342],[1393545600000,0.0445100966240366],[1396224000000,0.008261724659752723],[1398816000000,0.006927178874565065],[1401494400000,0.02294135673066489],[1404086400000,0.02043480987045143],[1406764800000,-0.01352895831262835],[1409443200000,0.03870458666212961],[1412035200000,-0.01389223849499466],[1414713600000,0.0232780671888122],[1417305600000,0.02710125398584484],[1419984000000,-0.002539835680443581],[1422662400000,-0.03007692280607355],[1425081600000,0.05468200067984963],[1427760000000,-0.01583043467119971],[1430352000000,0.009785686947210159],[1433030400000,0.01277427101364914],[1435622400000,-0.0205212610237302],[1438300800000,0.02233785506044939],[1440979200000,-0.06288646185425506],[1443571200000,-0.02584696903166517],[1446249600000,0.0816346819132967],[1448841600000,0.003648488731166744],[1451520000000,-0.01743354035724121],[1454198400000,-0.05106888547353439],[1456704000000,-0.0008261322551703643],[1459382400000,0.06510011074586064],[1461974400000,0.003933532728726874],[1464652800000,0.01686846902279449],[1467244800000,0.003469920014241623],[1469923200000,0.03582193890146801],[1472601600000,0.001196626369794451],[1475193600000,5.825321244845583e-05],[1477872000000,-0.01748933868140057],[1480464000000,0.03617638262230649],[1483142400000,0.02006890077031986],[1485820800000,0.01773644700257115],[1488240000000,0.0385392930641677],[1490918400000,0.001249137693515756],[1493510400000,0.009877148097350741],[1496188800000,0.01401429186071557],[1498780800000,0.006354815711420159],[1501459200000,0.02034592434003901],[1504137600000,0.00291332212443951],[1506729600000,0.01994926762677096],[1509408000000,0.02329068566098424],[1512000000000,0.03010791783077416],[1514678400000,0.01205490120845276]],"name":"SPY"},{"data":[[1359590400000,0.03660622496715016],[1362009600000,-0.01296967338399435],[1364688000000,0.01296967338399435],[1367280000000,0.04896767541647673],[1369958400000,-0.03065570595701539],[1372550400000,-0.02714450783205669],[1375228800000,0.05186031509926758],[1377907200000,-0.01974610614241801],[1380499200000,0.07533848716374791],[1383177600000,0.03208188249921573],[1385769600000,0.005449348250336161],[1388448000000,0.02152821623428069],[1391126400000,-0.05341324664898472],[1393545600000,0.05950497951647593],[1396224000000,-0.004602632263898343],[1398816000000,0.01652930693987464],[1401494400000,0.01582841246322353],[1404086400000,0.009165679249410807],[1406764800000,-0.02638022928063588],[1409443200000,0.00180060962108719],[1412035200000,-0.0395985431446424],[1414713600000,-0.002654624666467154],[1417305600000,0.0006251922240649854],[1419984000000,-0.04074673195633638],[1422662400000,0.006226579984693448],[1425081600000,0.06145058755162047],[1427760000000,-0.01438884196095414],[1430352000000,0.03581675552030772],[1433030400000,0.001952406713538579],[1435622400000,-0.03167858857997263],[1438300800000,0.02011436982550174],[1440979200000,-0.07715236814970394],[1443571200000,-0.04519488727542376],[1446249600000,0.06402580256309198],[1448841600000,-0.007555582364048963],[1451520000000,-0.02359517207365691],[1454198400000,-0.05675798007969046],[1456704000000,-0.0339139470281431],[1459382400000,0.0637457191041868],[1461974400000,0.02197524441951471],[1464652800000,-0.0008562083231331563],[1467244800000,-0.02449149736053524],[1469923200000,0.03900023557317933],[1472601600000,0.005326981393254826],[1475193600000,0.01327903205683878],[1477872000000,-0.0224037016710068],[1480464000000,-0.0179744786882825],[1483142400000,0.02670293615653296],[1485820800000,0.03238194979753484],[1488240000000,0.01183640432886879],[1490918400000,0.03180566196780754],[1493510400000,0.02395228021072393],[1496188800000,0.03481019646848926],[1498780800000,0.002955784649965043],[1501459200000,0.02618795805770135],[1504137600000,-0.000448298806317915],[1506729600000,0.02334277136259377],[1509408000000,0.01665381688304368],[1512000000000,0.00686971411117554],[1514678400000,0.01339837912676334]],"name":"EFA"},{"data":[[1359590400000,0.05213349707806136],[1362009600000,0.01617510132855848],[1364688000000,0.04025798462469909],[1367280000000,0.001222677653998083],[1369958400000,0.04197637068671334],[1372550400000,-0.001403035894372628],[1375228800000,0.06354126156165751],[1377907200000,-0.03474295117372028],[1380499200000,0.06387336803030985],[1383177600000,0.03423399109996961],[1385769600000,0.04166132297779335],[1388448000000,0.01289182254908861],[1391126400000,-0.03577535528563924],[1393545600000,0.04525756165696082],[1396224000000,0.01331499966900029],[1398816000000,-0.02318407367103337],[1401494400000,0.006205426240098788],[1404086400000,0.0377188121009957],[1406764800000,-0.05200941996042996],[1409443200000,0.04365763395919142],[1412035200000,-0.06126037108120963],[1414713600000,0.06887485969894414],[1417305600000,0.004773468701881445],[1419984000000,0.02529596545001978],[1422662400000,-0.05462801219805513],[1425081600000,0.05691488398598787],[1427760000000,0.01015622963830998],[1430352000000,-0.01841781315093138],[1433030400000,0.007510081038882621],[1435622400000,0.00417125696204268],[1438300800000,-0.02737531042251673],[1440979200000,-0.04726833915397766],[1443571200000,-0.03846472803956535],[1446249600000,0.06358948725118729],[1448841600000,0.02441537093517798],[1451520000000,-0.05215705543360016],[1454198400000,-0.06030670844947883],[1456704000000,0.02060504486821779],[1459382400000,0.08991062336001709],[1461974400000,0.02104406525661906],[1464652800000,0.004397329285465545],[1467244800000,0.008292070719901456],[1469923200000,0.04934819057190287],[1472601600000,0.0112613030030384],[1475193600000,0.008614786971760324],[1477872000000,-0.0381351886647554],[1480464000000,0.1252468827968132],[1483142400000,0.03149154151213818],[1485820800000,-0.01214421604826654],[1488240000000,0.01342922738254693],[1490918400000,-0.00653320086403486],[1493510400000,0.005107732572771972],[1496188800000,-0.02286276953078215],[1498780800000,0.0291521345438932],[1501459200000,0.007481196167901771],[1504137600000,-0.02756446309040772],[1506729600000,0.08232134717313144],[1509408000000,0.005916398166679215],[1512000000000,0.03691326921843263],[1514678400000,-0.003730976685755394]],"name":"IJS"},{"data":[[1359590400000,-0.002935510891409532],[1362009600000,-0.02310532323487591],[1364688000000,-0.01023486262964557],[1367280000000,0.01208453428821255],[1369958400000,-0.04948347717215462],[1372550400000,-0.05472822700112223],[1375228800000,0.01315968643015797],[1377907200000,-0.02570544995129032],[1380499200000,0.06958902644389031],[1383177600000,0.04086094270478036],[1385769600000,-0.0025942125773466],[1388448000000,-0.004074209149782959],[1391126400000,-0.09032235106757192],[1393545600000,0.03322015051058047],[1396224000000,0.03802169451544612],[1398816000000,0.007772751423730018],[1401494400000,0.02909118330252758],[1404086400000,0.02373424895439147],[1406764800000,0.0135554184087181],[1409443200000,0.02790466838796979],[1412035200000,-0.08085664605541032],[1414713600000,0.01409662836690639],[1417305600000,-0.01554177911936883],[1419984000000,-0.0404417411111182],[1422662400000,-0.006896212831609461],[1425081600000,0.04313637659404046],[1427760000000,-0.015086219244421],[1430352000000,0.06628134217717196],[1433030400000,-0.04191106890098961],[1435622400000,-0.02974688465714648],[1438300800000,-0.0651775745932679],[1440979200000,-0.09251266896024735],[1443571200000,-0.0318249851625696],[1446249600000,0.06180843760945232],[1448841600000,-0.02556047943016626],[1451520000000,-0.03894710602993046],[1454198400000,-0.05163679039829372],[1456704000000,-0.008211380375246602],[1459382400000,0.1218789894593302],[1461974400000,0.004079096822191097],[1464652800000,-0.03762847979632244],[1467244800000,0.04458245654575776],[1469923200000,0.05244209237529018],[1472601600000,0.008798660864719476],[1475193600000,0.02487285540522644],[1477872000000,-0.008312337395070202],[1480464000000,-0.0451614701948273],[1483142400000,-0.002530198231995406],[1485820800000,0.06443144594850825],[1488240000000,0.01725765664369927],[1490918400000,0.03618910138594433],[1493510400000,0.01686647346595693],[1496188800000,0.02805989734482761],[1498780800000,0.009223800462591303],[1501459200000,0.05659444915060119],[1504137600000,0.0232436915084171],[1506729600000,-0.0004461044956753923],[1509408000000,0.03227835416362135],[1512000000000,-0.003896822172014147],[1514678400000,0.03692542842724]],"name":"EEM"},{"data":[[1359590400000,-0.006231353973952025],[1362009600000,0.005891879117339016],[1364688000000,0.0009850025466793255],[1367280000000,0.009638896140085507],[1369958400000,-0.0202138367163478],[1372550400000,-0.01577843232925069],[1375228800000,0.002687067023869893],[1377907200000,-0.008297669202922187],[1380499200000,0.01114391541763204],[1383177600000,0.008292169030885255],[1385769600000,-0.002510060873781583],[1388448000000,-0.005583006537737134],[1391126400000,0.01529161978652294],[1393545600000,0.003756988861460364],[1396224000000,-0.001481376858423644],[1398816000000,0.008182986052310603],[1401494400000,0.01172185303311224],[1404086400000,-0.0005756233567870694],[1406764800000,-0.00251199856494555],[1409443200000,0.011430277297098],[1412035200000,-0.006167052590605238],[1414713600000,0.01058466537300617],[1417305600000,0.006548526237776464],[1419984000000,0.001474810326349996],[1422662400000,0.0203154443753224],[1425081600000,-0.008988029216016713],[1427760000000,0.003740133915662192],[1430352000000,-0.003233039063048615],[1433030400000,-0.00438392625427042],[1435622400000,-0.01082508066556453],[1438300800000,0.008584476433870059],[1440979200000,-0.003363901188946805],[1443571200000,0.008081739668763355],[1446249600000,0.0006849316815422668],[1448841600000,-0.003898073383433953],[1451520000000,-0.001918833513485652],[1454198400000,0.01232993654560044],[1456704000000,0.008831618628965643],[1459382400000,0.00870844463549858],[1461974400000,0.002546698470761832],[1464652800000,0.0001353706306996827],[1467244800000,0.01916711341154187],[1469923200000,0.005429281480203052],[1472601600000,-0.002156009504199474],[1475193600000,0.0005158154757420874],[1477872000000,-0.008204618784477979],[1480464000000,-0.0259903134633781],[1483142400000,0.002537769504244558],[1485820800000,0.002126557483718372],[1488240000000,0.006438108810366217],[1490918400000,-0.0005532766981275472],[1493510400000,0.009029370419121996],[1496188800000,0.006847532871940842],[1498780800000,-0.0001826916026734793],[1501459200000,0.003334286338265713],[1504137600000,0.009369127913338104],[1506729600000,-0.005732261388667226],[1509408000000,0.000978107907092074],[1512000000000,-0.001483978638500361],[1514678400000,0.004740394507019019]],"name":"AGG"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false},"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>No gráfico temos uma linha para os retornos mensais de cada ativo. Passe o mouse sobre o gráfico e examine como apresenta os dados de cada ativo.</p>
+<p>Hicharter também tem a capacidade de fazer histogramas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>hc_hist<span class="ot">&lt;-</span><span class="fu">hist</span>(asset_returns_xts[, symbols[<span class="dv">1</span>]],</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">breaks=</span> <span class="dv">50</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hchart</span>(hc_hist, <span class="at">color=</span><span class="st">"cornflowerblue"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_title</span>(<span class="at">text=</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">paste</span>(symbols[<span class="dv">1</span>],</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Log Returns Distribution"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sep=</span> <span class="st">" "</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_theme</span>(<span class="fu">hc_theme_flat</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_exporting</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_legend</span>(<span class="at">enabled=</span><span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-0a56213ea9a17a5597fe" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-0a56213ea9a17a5597fe">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"SPY Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.06250000000000001,"y":1,"name":"(-0.065, -0.06]"},{"x":-0.05750000000000001,"y":0,"name":"(-0.06, -0.055]"},{"x":-0.05250000000000002,"y":1,"name":"(-0.055, -0.05]"},{"x":-0.04750000000000001,"y":0,"name":"(-0.05, -0.045]"},{"x":-0.04250000000000001,"y":0,"name":"(-0.045, -0.04]"},{"x":-0.03750000000000001,"y":1,"name":"(-0.04, -0.035]"},{"x":-0.03250000000000001,"y":2,"name":"(-0.035, -0.03]"},{"x":-0.02750000000000001,"y":1,"name":"(-0.03, -0.025]"},{"x":-0.02250000000000001,"y":1,"name":"(-0.025, -0.02]"},{"x":-0.01750000000000001,"y":3,"name":"(-0.02, -0.015]"},{"x":-0.01250000000000001,"y":3,"name":"(-0.015, -0.01]"},{"x":-0.007500000000000007,"y":0,"name":"(-0.01, -0.005]"},{"x":-0.002500000000000002,"y":2,"name":"(-0.005, 0]"},{"x":0.002499999999999995,"y":7,"name":"(-6.93889390390723e-18, 0.005]"},{"x":0.007499999999999993,"y":5,"name":"(0.00499999999999999, 0.01]"},{"x":0.0125,"y":4,"name":"(0.01, 0.015]"},{"x":0.0175,"y":4,"name":"(0.015, 0.02]"},{"x":0.02250000000000001,"y":8,"name":"(0.02, 0.025]"},{"x":0.0275,"y":3,"name":"(0.025, 0.03]"},{"x":0.0325,"y":2,"name":"(0.03, 0.035]"},{"x":0.03750000000000001,"y":5,"name":"(0.035, 0.04]"},{"x":0.0425,"y":1,"name":"(0.04, 0.045]"},{"x":0.0475,"y":2,"name":"(0.045, 0.05]"},{"x":0.0525,"y":2,"name":"(0.05, 0.055]"},{"x":0.05750000000000001,"y":0,"name":"(0.055, 0.06]"},{"x":0.06250000000000001,"y":0,"name":"(0.06, 0.065]"},{"x":0.06750000000000002,"y":1,"name":"(0.065, 0.07]"},{"x":0.07250000000000001,"y":0,"name":"(0.07, 0.075]"},{"x":0.0775,"y":0,"name":"(0.075, 0.08]"},{"x":0.08250000000000002,"y":1,"name":"(0.08, 0.085]"}],"type":"column","pointRange":0.005000000000000004,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"cornflowerblue"}],"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Agora podemos introduzir o conceito de funções para criar os histogramas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>hc_hist_fun<span class="ot">&lt;-</span><span class="cf">function</span>( <span class="at">n=</span><span class="dv">1</span>, object, color){</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  hc_hist<span class="ot">&lt;-</span><span class="fu">hist</span>(object[,symbols[n]],</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">breaks =</span> <span class="dv">50</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot =</span><span class="cn">FALSE</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hchart</span>(hc_hist, <span class="at">color =</span> color) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_title</span>(<span class="at">text =</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">paste</span>(symbols[n],</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Log Returns Distribution"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sep=</span> <span class="st">" "</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_theme</span>(<span class="fu">hc_theme_flat</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_exporting</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_legend</span>(<span class="at">enabled=</span><span class="cn">TRUE</span>) </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Agora podemos criar um histograma para cada ativo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hc_hist_fun</span>(<span class="dv">1</span>, asset_returns_xts,<span class="st">"cornflowerblue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-f7993a0da837a2a4caa3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-f7993a0da837a2a4caa3">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"SPY Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.06250000000000001,"y":1,"name":"(-0.065, -0.06]"},{"x":-0.05750000000000001,"y":0,"name":"(-0.06, -0.055]"},{"x":-0.05250000000000002,"y":1,"name":"(-0.055, -0.05]"},{"x":-0.04750000000000001,"y":0,"name":"(-0.05, -0.045]"},{"x":-0.04250000000000001,"y":0,"name":"(-0.045, -0.04]"},{"x":-0.03750000000000001,"y":1,"name":"(-0.04, -0.035]"},{"x":-0.03250000000000001,"y":2,"name":"(-0.035, -0.03]"},{"x":-0.02750000000000001,"y":1,"name":"(-0.03, -0.025]"},{"x":-0.02250000000000001,"y":1,"name":"(-0.025, -0.02]"},{"x":-0.01750000000000001,"y":3,"name":"(-0.02, -0.015]"},{"x":-0.01250000000000001,"y":3,"name":"(-0.015, -0.01]"},{"x":-0.007500000000000007,"y":0,"name":"(-0.01, -0.005]"},{"x":-0.002500000000000002,"y":2,"name":"(-0.005, 0]"},{"x":0.002499999999999995,"y":7,"name":"(-6.93889390390723e-18, 0.005]"},{"x":0.007499999999999993,"y":5,"name":"(0.00499999999999999, 0.01]"},{"x":0.0125,"y":4,"name":"(0.01, 0.015]"},{"x":0.0175,"y":4,"name":"(0.015, 0.02]"},{"x":0.02250000000000001,"y":8,"name":"(0.02, 0.025]"},{"x":0.0275,"y":3,"name":"(0.025, 0.03]"},{"x":0.0325,"y":2,"name":"(0.03, 0.035]"},{"x":0.03750000000000001,"y":5,"name":"(0.035, 0.04]"},{"x":0.0425,"y":1,"name":"(0.04, 0.045]"},{"x":0.0475,"y":2,"name":"(0.045, 0.05]"},{"x":0.0525,"y":2,"name":"(0.05, 0.055]"},{"x":0.05750000000000001,"y":0,"name":"(0.055, 0.06]"},{"x":0.06250000000000001,"y":0,"name":"(0.06, 0.065]"},{"x":0.06750000000000002,"y":1,"name":"(0.065, 0.07]"},{"x":0.07250000000000001,"y":0,"name":"(0.07, 0.075]"},{"x":0.0775,"y":0,"name":"(0.075, 0.08]"},{"x":0.08250000000000002,"y":1,"name":"(0.08, 0.085]"}],"type":"column","pointRange":0.005000000000000004,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"cornflowerblue"}],"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hc_hist_fun</span>(<span class="dv">2</span>, asset_returns_xts,<span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-6060db9bd98ebb87440d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-6060db9bd98ebb87440d">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"EFA Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.07750000000000001,"y":1,"name":"(-0.08, -0.075]"},{"x":-0.07250000000000001,"y":0,"name":"(-0.075, -0.07]"},{"x":-0.0675,"y":0,"name":"(-0.07, -0.065]"},{"x":-0.06250000000000001,"y":0,"name":"(-0.065, -0.06]"},{"x":-0.05750000000000001,"y":1,"name":"(-0.06, -0.055]"},{"x":-0.0525,"y":1,"name":"(-0.055, -0.05]"},{"x":-0.04750000000000001,"y":1,"name":"(-0.05, -0.045]"},{"x":-0.04250000000000001,"y":1,"name":"(-0.045, -0.04]"},{"x":-0.03750000000000001,"y":1,"name":"(-0.04, -0.035]"},{"x":-0.0325,"y":3,"name":"(-0.035, -0.03]"},{"x":-0.02750000000000001,"y":2,"name":"(-0.03, -0.025]"},{"x":-0.02250000000000001,"y":3,"name":"(-0.025, -0.02]"},{"x":-0.0175,"y":2,"name":"(-0.02, -0.015]"},{"x":-0.0125,"y":2,"name":"(-0.015, -0.01]"},{"x":-0.007500000000000007,"y":1,"name":"(-0.01, -0.005]"},{"x":-0.002500000000000002,"y":4,"name":"(-0.005, 0]"},{"x":0.002500000000000002,"y":4,"name":"(0, 0.005]"},{"x":0.007500000000000007,"y":5,"name":"(0.005, 0.01]"},{"x":0.0125,"y":4,"name":"(0.01, 0.015]"},{"x":0.0175,"y":3,"name":"(0.015, 0.02]"},{"x":0.02250000000000001,"y":5,"name":"(0.02, 0.025]"},{"x":0.0275,"y":2,"name":"(0.025, 0.03]"},{"x":0.0325,"y":4,"name":"(0.03, 0.035]"},{"x":0.03750000000000001,"y":3,"name":"(0.035, 0.04]"},{"x":0.04250000000000001,"y":0,"name":"(0.04, 0.045]"},{"x":0.04750000000000001,"y":1,"name":"(0.045, 0.05]"},{"x":0.05250000000000002,"y":1,"name":"(0.05, 0.055]"},{"x":0.05750000000000001,"y":1,"name":"(0.055, 0.06]"},{"x":0.0625,"y":3,"name":"(0.06, 0.065]"},{"x":0.0675,"y":0,"name":"(0.065, 0.07]"},{"x":0.07250000000000001,"y":0,"name":"(0.07, 0.075]"},{"x":0.07750000000000001,"y":1,"name":"(0.075, 0.08]"}],"type":"column","pointRange":0.005000000000000004,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"green"}],"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hc_hist_fun</span>(<span class="dv">3</span>, asset_returns_xts,<span class="st">"pink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-9f0c26d19e74ae7a30a7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9f0c26d19e74ae7a30a7">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"IJS Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.06250000000000001,"y":2,"name":"(-0.065, -0.06]"},{"x":-0.05750000000000001,"y":0,"name":"(-0.06, -0.055]"},{"x":-0.05250000000000001,"y":3,"name":"(-0.055, -0.05]"},{"x":-0.04750000000000001,"y":1,"name":"(-0.05, -0.045]"},{"x":-0.04250000000000001,"y":0,"name":"(-0.045, -0.04]"},{"x":-0.03750000000000001,"y":3,"name":"(-0.04, -0.035]"},{"x":-0.0325,"y":1,"name":"(-0.035, -0.03]"},{"x":-0.0275,"y":2,"name":"(-0.03, -0.025]"},{"x":-0.0225,"y":2,"name":"(-0.025, -0.02]"},{"x":-0.0175,"y":1,"name":"(-0.02, -0.015]"},{"x":-0.0125,"y":1,"name":"(-0.015, -0.01]"},{"x":-0.007499999999999993,"y":1,"name":"(-0.01, -0.00499999999999999]"},{"x":-0.002499999999999995,"y":2,"name":"(-0.005, 6.93889390390723e-18]"},{"x":0.002500000000000002,"y":4,"name":"(0, 0.005]"},{"x":0.007500000000000007,"y":7,"name":"(0.005, 0.01]"},{"x":0.01250000000000001,"y":5,"name":"(0.01, 0.015]"},{"x":0.01750000000000002,"y":1,"name":"(0.015, 0.02]"},{"x":0.02250000000000002,"y":3,"name":"(0.02, 0.025]"},{"x":0.02750000000000002,"y":2,"name":"(0.025, 0.03]"},{"x":0.03250000000000001,"y":2,"name":"(0.03, 0.035]"},{"x":0.03750000000000002,"y":2,"name":"(0.035, 0.04]"},{"x":0.04250000000000002,"y":4,"name":"(0.04, 0.045]"},{"x":0.04750000000000003,"y":2,"name":"(0.045, 0.05]"},{"x":0.05250000000000003,"y":1,"name":"(0.05, 0.055]"},{"x":0.05750000000000004,"y":1,"name":"(0.055, 0.06]"},{"x":0.06250000000000004,"y":3,"name":"(0.06, 0.065]"},{"x":0.06750000000000003,"y":1,"name":"(0.065, 0.07]"},{"x":0.07250000000000002,"y":0,"name":"(0.07, 0.075]"},{"x":0.07750000000000003,"y":0,"name":"(0.075, 0.08]"},{"x":0.08250000000000003,"y":1,"name":"(0.08, 0.085]"},{"x":0.08750000000000004,"y":1,"name":"(0.085, 0.09]"},{"x":0.09250000000000004,"y":0,"name":"(0.09, 0.095]"},{"x":0.09750000000000004,"y":0,"name":"(0.095, 0.1]"},{"x":0.1025,"y":0,"name":"(0.1, 0.105]"},{"x":0.1075000000000001,"y":0,"name":"(0.105, 0.11]"},{"x":0.1125000000000001,"y":0,"name":"(0.11, 0.115]"},{"x":0.1175000000000001,"y":0,"name":"(0.115, 0.12]"},{"x":0.1225000000000001,"y":0,"name":"(0.12, 0.125]"},{"x":0.1275000000000001,"y":1,"name":"(0.125, 0.13]"}],"type":"column","pointRange":0.005000000000000004,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"pink"}],"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hc_hist_fun</span>(<span class="dv">4</span>, asset_returns_xts,<span class="st">"purple"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-129f540d5d4397bc4134" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-129f540d5d4397bc4134">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"EEM Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.09250000000000001,"y":2,"name":"(-0.095, -0.09]"},{"x":-0.08750000000000002,"y":0,"name":"(-0.09, -0.085]"},{"x":-0.08250000000000002,"y":1,"name":"(-0.085, -0.08]"},{"x":-0.07750000000000001,"y":0,"name":"(-0.08, -0.075]"},{"x":-0.07250000000000001,"y":0,"name":"(-0.075, -0.07]"},{"x":-0.0675,"y":1,"name":"(-0.07, -0.065]"},{"x":-0.0625,"y":0,"name":"(-0.065, -0.06]"},{"x":-0.05750000000000001,"y":0,"name":"(-0.06, -0.055]"},{"x":-0.0525,"y":2,"name":"(-0.055, -0.05]"},{"x":-0.0475,"y":2,"name":"(-0.05, -0.045]"},{"x":-0.04250000000000001,"y":2,"name":"(-0.045, -0.04]"},{"x":-0.03750000000000001,"y":2,"name":"(-0.04, -0.035]"},{"x":-0.0325,"y":1,"name":"(-0.035, -0.03]"},{"x":-0.0275,"y":3,"name":"(-0.03, -0.025]"},{"x":-0.02250000000000001,"y":1,"name":"(-0.025, -0.02]"},{"x":-0.0175,"y":2,"name":"(-0.02, -0.015]"},{"x":-0.0125,"y":1,"name":"(-0.015, -0.01]"},{"x":-0.007499999999999993,"y":3,"name":"(-0.01, -0.00499999999999999]"},{"x":-0.002499999999999995,"y":6,"name":"(-0.005, 6.93889390390723e-18]"},{"x":0.002500000000000002,"y":1,"name":"(0, 0.005]"},{"x":0.007500000000000007,"y":3,"name":"(0.005, 0.01]"},{"x":0.0125,"y":4,"name":"(0.01, 0.015]"},{"x":0.0175,"y":2,"name":"(0.015, 0.02]"},{"x":0.02250000000000001,"y":3,"name":"(0.02, 0.025]"},{"x":0.02750000000000001,"y":3,"name":"(0.025, 0.03]"},{"x":0.03250000000000001,"y":2,"name":"(0.03, 0.035]"},{"x":0.03750000000000002,"y":3,"name":"(0.035, 0.04]"},{"x":0.04250000000000001,"y":3,"name":"(0.04, 0.045]"},{"x":0.0475,"y":0,"name":"(0.045, 0.05]"},{"x":0.0525,"y":1,"name":"(0.05, 0.055]"},{"x":0.05750000000000001,"y":1,"name":"(0.055, 0.06]"},{"x":0.06250000000000001,"y":2,"name":"(0.06, 0.065]"},{"x":0.06750000000000002,"y":2,"name":"(0.065, 0.07]"},{"x":0.07250000000000002,"y":0,"name":"(0.07, 0.075]"},{"x":0.07750000000000003,"y":0,"name":"(0.075, 0.08]"},{"x":0.08250000000000003,"y":0,"name":"(0.08, 0.085]"},{"x":0.08750000000000002,"y":0,"name":"(0.085, 0.09]"},{"x":0.09250000000000001,"y":0,"name":"(0.09, 0.095]"},{"x":0.09750000000000002,"y":0,"name":"(0.095, 0.1]"},{"x":0.1025,"y":0,"name":"(0.1, 0.105]"},{"x":0.1075,"y":0,"name":"(0.105, 0.11]"},{"x":0.1125,"y":0,"name":"(0.11, 0.115]"},{"x":0.1175,"y":0,"name":"(0.115, 0.12]"},{"x":0.1225,"y":1,"name":"(0.12, 0.125]"}],"type":"column","pointRange":0.005000000000000004,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"purple"}],"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hc_hist_fun</span>(<span class="dv">5</span>, asset_returns_xts,<span class="st">"yellow"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item" id="htmlwidget-2e2dfddfc5677bc15c66" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-2e2dfddfc5677bc15c66">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"AGG Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.02550000000000001,"y":1,"name":"(-0.026, -0.025]"},{"x":-0.02450000000000001,"y":0,"name":"(-0.025, -0.024]"},{"x":-0.02350000000000001,"y":0,"name":"(-0.024, -0.023]"},{"x":-0.02250000000000001,"y":0,"name":"(-0.023, -0.022]"},{"x":-0.02150000000000001,"y":0,"name":"(-0.022, -0.021]"},{"x":-0.02050000000000001,"y":1,"name":"(-0.021, -0.02]"},{"x":-0.01950000000000001,"y":0,"name":"(-0.02, -0.019]"},{"x":-0.01850000000000001,"y":0,"name":"(-0.019, -0.018]"},{"x":-0.01750000000000001,"y":0,"name":"(-0.018, -0.017]"},{"x":-0.01650000000000001,"y":0,"name":"(-0.017, -0.016]"},{"x":-0.01550000000000001,"y":1,"name":"(-0.016, -0.015]"},{"x":-0.01450000000000001,"y":0,"name":"(-0.015, -0.014]"},{"x":-0.01350000000000001,"y":0,"name":"(-0.014, -0.013]"},{"x":-0.01250000000000001,"y":0,"name":"(-0.013, -0.012]"},{"x":-0.01150000000000001,"y":0,"name":"(-0.012, -0.011]"},{"x":-0.01050000000000001,"y":1,"name":"(-0.011, -0.01]"},{"x":-0.009500000000000005,"y":0,"name":"(-0.01, -0.009]"},{"x":-0.008500000000000004,"y":3,"name":"(-0.009, -0.008]"},{"x":-0.007500000000000003,"y":0,"name":"(-0.008, -0.007]"},{"x":-0.006500000000000002,"y":2,"name":"(-0.007, -0.006]"},{"x":-0.005500000000000003,"y":2,"name":"(-0.006, -0.005]"},{"x":-0.004500000000000004,"y":1,"name":"(-0.005, -0.004]"},{"x":-0.003500000000000003,"y":3,"name":"(-0.004, -0.003]"},{"x":-0.002500000000000002,"y":3,"name":"(-0.003, -0.002]"},{"x":-0.001500000000000001,"y":3,"name":"(-0.002, -0.001]"},{"x":-0.0005000000000000004,"y":3,"name":"(-0.001, 0]"},{"x":0.0005000000000000004,"y":5,"name":"(0, 0.001]"},{"x":0.0015,"y":1,"name":"(0.000999999999999999, 0.002]"},{"x":0.002499999999999999,"y":4,"name":"(0.002, 0.003]"},{"x":0.0035,"y":3,"name":"(0.003, 0.004]"},{"x":0.004500000000000001,"y":1,"name":"(0.004, 0.005]"},{"x":0.005500000000000001,"y":2,"name":"(0.005, 0.006]"},{"x":0.006500000000000002,"y":3,"name":"(0.006, 0.007]"},{"x":0.007500000000000003,"y":0,"name":"(0.007, 0.008]"},{"x":0.008500000000000004,"y":6,"name":"(0.008, 0.009]"},{"x":0.009500000000000005,"y":3,"name":"(0.009, 0.01]"},{"x":0.01050000000000001,"y":1,"name":"(0.01, 0.011]"},{"x":0.01150000000000001,"y":3,"name":"(0.011, 0.012]"},{"x":0.01250000000000001,"y":1,"name":"(0.012, 0.013]"},{"x":0.01350000000000001,"y":0,"name":"(0.013, 0.014]"},{"x":0.01450000000000001,"y":0,"name":"(0.014, 0.015]"},{"x":0.0155,"y":1,"name":"(0.015, 0.016]"},{"x":0.0165,"y":0,"name":"(0.016, 0.017]"},{"x":0.01750000000000001,"y":0,"name":"(0.017, 0.018]"},{"x":0.01850000000000001,"y":0,"name":"(0.018, 0.019]"},{"x":0.01950000000000001,"y":1,"name":"(0.019, 0.02]"},{"x":0.02050000000000001,"y":1,"name":"(0.02, 0.021]"}],"type":"column","pointRange":0.001000000000000001,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"yellow"}],"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Poderíamos ter utilizado purrr::map e aplicar a função ao nosso objeto xts, percorrendo cada um dos ativos obtendo um histograma para cada.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, hc_hist_fun, asset_returns_xts, <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+
+[[2]]
+
+[[3]]
+
+[[4]]
+
+[[5]]</code></pre>
+</div>
+</div>
+</section>
+<section id="visualização-com-tidyverse" class="level4">
+<h4 class="anchored" data-anchor-id="visualização-com-tidyverse">Visualização com tidyverse</h4>
+<p>Este assunto já foi coberto em nossas aulas anteriores. Então seguem os exercícios.</p>
+</section>
+<section id="exercício-5" class="level4">
+<h4 class="anchored" data-anchor-id="exercício-5">Exercício 5</h4>
+<p>Utilize o ggplot2 e o código abaixo para obter a forma longa do objeto tidyverse desenvolvido no texto. Obtenha um histograma conjunto com uma cor por ativo utilizando os argumentos alpha=0.45 e binwidth = .005. Coloque o título de “Monthly Returns Since 2013”</p>
+</section>
+<section id="exercício-6-obtenha-o-gráfico-acima-utilizando-o-conceito-de-ggplot2facet_wrap." class="level4">
+<h4 class="anchored" data-anchor-id="exercício-6-obtenha-o-gráfico-acima-utilizando-o-conceito-de-ggplot2facet_wrap.">Exercício 6 Obtenha o gráfico acima utilizando o conceito de <em>ggplot2:facet_wrap()</em>.</h4>
+</section>
+<section id="exercício-7" class="level4">
+<h4 class="anchored" data-anchor-id="exercício-7">Exercício 7</h4>
+<p>Refaça os dois exercícios para a carteira com ativos brasileiros.</p>
+</section>
+<section id="exercício-8-obtenha-o-gráfico-das-densidades-das-distribuições-dos-ativos-do-objeto-tidyverse-desenvolvido-coloque-o-título-monthly-returns-density-since-2013e-para-o-eixo-x-monthly-returns-e-y-distribution." class="level4">
+<h4 class="anchored" data-anchor-id="exercício-8-obtenha-o-gráfico-das-densidades-das-distribuições-dos-ativos-do-objeto-tidyverse-desenvolvido-coloque-o-título-monthly-returns-density-since-2013e-para-o-eixo-x-monthly-returns-e-y-distribution.">Exercício 8 Obtenha o gráfico das densidades das distribuições dos ativos do objeto tidyverse desenvolvido coloque o título: “Monthly Returns Density Since 2013”e para o eixo x: “monthly returns” e y: “distribution”.</h4>
+</section>
+<section id="exercício-9" class="level4">
+<h4 class="anchored" data-anchor-id="exercício-9">Exercício 9</h4>
+<p>Combine para os ativos do portifólio utilizando o ggplot2::facetwrap os histogramas e densidades. Utilize título: “Monthly Returns Density Since 2013”e para o eixo x: “monthly returns” e y: “distribution”.</p>
+<p>Por hoje é só… obs entregue seus exercícios no schoology.com valem nota.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        typesetMath(container);
+        return container.innerHTML
+      } else {
+        typesetMath(note);
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

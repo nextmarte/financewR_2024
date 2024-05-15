@@ -1,0 +1,19 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+
+  title: "Finanças com R"
+  navbar:
+    left:
+      - href: Finance_with_R_1_2022.qmd
+        text: Home
+
+format:
+  html:
+    theme: cosmo
+    # css: styles.css
+    toc: true
+
+editor: visual
